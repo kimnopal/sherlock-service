@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sherlock</title>
+  </head>
+  <body>
+    <h1>Message</h1>
+    <h1 id="message"></h1>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script>
+      const client = mqtt.connect(
+        "wss://5dda2b51fb16459eb2e2de9ea499b546.s1.eu.hivemq.cloud:8884/mqtt",
+        {
+          username: "admin",
+          password: "Admin123",
+        }
+      );
+
+      client.on("error", (err) => {
+        console.log("error", err);
+      });
+
+      client.on("connect", () => {
+        console.log("connected");
+        client.subscribe("test", (err) => {
+          if (!err) {
+            console.log("ok");
+          } else {
+            console.log("err", err);
+          }
+        });
+      });
+
+      client.on("message", (topic, message) => {
+        console.log(message.toString());
+        document.getElementById("message").innerText = message.toString();
+      });
+    </script>
+  </body>
+</html>
